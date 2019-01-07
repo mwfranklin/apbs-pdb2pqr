@@ -8,7 +8,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(CMAKE_SWIG_FLAGS "")
 
-SWIG_ADD_MODULE(apbslib python apbslib.i)
+SWIG_ADD_LIBRARY(apbslib LANGUAGE python SOURCE apbslib.i)
 
 # Hack to get the correct shared library extensions.  Why does Python suck so hard wrt to this?
 if(APPLE)
