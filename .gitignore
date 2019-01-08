@@ -5,6 +5,14 @@ io.mc
 *.pyd
 *.komodoproject
 bin/
+**/CMakeFiles/
+**/cmake_install.cmake
+**/Makefile
+**/*.so
+**/*.os
+apbs/src/apbscfg.h
+pdb2pqr/3dmol/js/3dmol.js
+**/apbslib.py
 **/build/CMakeFiles/
 **/build/Win32/
 **/build/*.cmake
