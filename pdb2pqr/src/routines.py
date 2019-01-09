@@ -1505,6 +1505,7 @@ class Routines:
         init_params = pdb2pka_params.copy()
         init_params.pop('pairene')
         init_params.pop('clean_output')
+        init_params.pop('res')
 
         results = pka.pre_init(original_pdb_list=pdblist,
                                ff=ff,
@@ -1518,7 +1519,7 @@ class Routines:
                                                  pairene=pdb2pka_params.get('pairene'))
 
         print 'Doing full pKa calculation'
-        mypkaRoutines.runpKa()
+        mypkaRoutines.runpKa(res=pdb2pka_params.get('res'))
 
         pdb2pka_warnings = mypkaRoutines.warnings[:]
 

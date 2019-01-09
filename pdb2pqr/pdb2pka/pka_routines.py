@@ -219,11 +219,12 @@ class pKaRoutines:
     # -----------------------------------------
     #
 
-    def runpKa(self,ghost=None):
+    def runpKa(self,ghost=None,res=None):
         """
         #    Main driver for running pKa calculations
         """
-        self.findTitratableGroups()
+        self.findTitratableGroups(res)
+        print "IDed titratable groups"
 
         if self.maps==2:
             self.generateMaps()
@@ -239,9 +240,11 @@ class pKaRoutines:
             # Normal pKa calculation
             #
             self.calculateIntrinsicpKa()
+            print "calculated intrinsic pKa values"
 
             """ Calculate Pairwise Interactions """
             self.calculatePairwiseInteractions()
+            print 'calculated pariwise interactions'
 
             """ Calculate Full pKa Value """
             self.calculatepKaValue()
@@ -1079,7 +1082,10 @@ class pKaRoutines:
         #  Calculate the intrinsic pKa values for all titratable groups
         """
         self.calculateDesolvation()
+        print 'calculated desolvation values'
+        
         self.calculateBackground()
+        print 'calculated background values'
         #
         # Calculate the intrinsic pKas
         #
@@ -1456,6 +1462,7 @@ class pKaRoutines:
             pKaGroup = pKa.pKaGroup
             ambiguity = pKa.amb
 
+            print residue, pKaGroup, ambiguity
             self.routines.write("-----> Calculating Desolvation Energy for %s %s\n" %(residue.name, residue.resSeq))
             for titration in pKaGroup.DefTitrations:
                 #
@@ -1542,6 +1549,8 @@ class pKaRoutines:
                         CM.set_calc('Desolv solv %s %s' %(pKa.residue.resSeq,state))
 
                     solutionEnergy=self.get_elec_energy(self.getAPBSPotentials(pKa,titration,state),atomlist)
+                    print 'calculated solution energy'
+                    
                     #
                     # Now we set all radii (= in protein)
                     #
@@ -2175,7 +2184,7 @@ class pKaRoutines:
     #
 
 
-    def findTitratableGroups(self):
+    def findTitratableGroups(self, res_list = None):
         """
             Find all titratable groups in the protein based on the definition
 
@@ -2193,37 +2202,46 @@ class pKaRoutines:
         sys.stdout.flush()
         #
         pKagroupList=self.pKagroups.keys()
-        #
+        #        
+        if res_list is not None:
+            #print res_list
+            res_list = [int(x) for x in res_list.split(":")]
         for chain in self.protein.getChains():
             for residue in chain.get("residues"):
                 resname = residue.get("name")
-                for group in pKagroupList:
-                    if resname == group:
-                        amb=self.find_hydrogen_amb_for_titgroup(residue,group)
-                        thispKa = pKa(residue, self.pKagroups[group], amb)
-                        pKalist.append(thispKa)
-                        self.routines.write("%s %s\n" % (resname, residue.resSeq), indent=1)
-                    elif group=='NTR':
-                        if residue.isNterm:
-                            #
-                            # N-terminus
-                            #
+                seq_id = residue.get("resSeq")
+                print resname, seq_id
+                if (res_list is None or seq_id in res_list or residue.isNterm or residue.isCterm):
+                    for group in pKagroupList:
+                        if resname == group:
                             amb=self.find_hydrogen_amb_for_titgroup(residue,group)
-                            thispKa=pKa(residue,self.pKagroups[group],amb)
+                            thispKa = pKa(residue, self.pKagroups[group], amb)
                             pKalist.append(thispKa)
                             self.routines.write("%s %s\n" % (resname, residue.resSeq), indent=1)
-                    elif group=='CTR':
-                        if residue.isCterm:
-                            #
-                            # C-terminus
-                            #
-                            amb=self.find_hydrogen_amb_for_titgroup(residue,group)
-                            thispKa=pKa(residue,self.pKagroups[group],amb)
-                            pKalist.append(thispKa)
-                            self.routines.write("%s %s\n" % (resname, residue.resSeq), indent=1)
+                        elif group=='NTR':
+                            if residue.isNterm:
+                                #
+                                # N-terminus
+                                #
+                                amb=self.find_hydrogen_amb_for_titgroup(residue,group)
+                                thispKa=pKa(residue,self.pKagroups[group],amb)
+                                pKalist.append(thispKa)
+                                self.routines.write("%s %s\n" % (resname, residue.resSeq), indent=1)
+                        elif group=='CTR':
+                            if residue.isCterm:
+                                #
+                                # C-terminus
+                                #
+                                amb=self.find_hydrogen_amb_for_titgroup(residue,group)
+                                thispKa=pKa(residue,self.pKagroups[group],amb)
+                                pKalist.append(thispKa)
+                                self.routines.write("%s %s\n" % (resname, residue.resSeq), indent=1)                    
+                    
         #
         # Find a neutral state for each group
         #
+        print(pKalist)
+        print(len(pKalist))
         self.neutral_ref_state={}
         for this_pka in pKalist:
             residue = this_pka.residue
