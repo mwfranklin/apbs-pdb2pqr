@@ -100,7 +100,7 @@ def get_titration_curves(protein_complex, state_file=None):
 
     for step in range(steps):
         pH = step * step_size
-        print("pH", pH)
+        #print("pH", pH)
 
         if state_file is not None:
             state_file.write ("pH="+ str(pH)+"\n")

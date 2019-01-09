@@ -572,7 +572,7 @@ def mainCommand(argv):
     pdb2pka_group.add_option('--sdie', dest='pdb2pka_sdie', default=80, type='int',
                              help='Solvent dielectric constant. Defaults to %default')
 
-    pdb2pka_group.add_option('--res', dest='pdb2pka_res', default="", type='str',
+    pdb2pka_group.add_option('--res', dest='pdb2pka_res', default=None, type='str',
                              help='List of residues to calculate pKas; format is a:b:c:d where a, b, c, d are residue numbers in PDB numbering')                         
                              
 #     pdb2pka_group.add_option('--maps', dest='maps', default=None, type='int',

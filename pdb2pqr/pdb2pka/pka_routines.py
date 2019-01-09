@@ -17,6 +17,7 @@ import pMC_mult
 import math
 import copy
 import string
+from datetime import datetime
 
 from graph_cut.utils import create_protein_complex_from_matrix, process_desolv_and_background, curve_for_one_group
 from graph_cut.titration_curve import get_titration_curves
@@ -223,8 +224,9 @@ class pKaRoutines:
         """
         #    Main driver for running pKa calculations
         """
+        start = datetime.today()
         self.findTitratableGroups(res)
-        print "IDed titratable groups"
+        print "ID'ed titratable groups"
 
         if self.maps==2:
             self.generateMaps()
@@ -244,10 +246,12 @@ class pKaRoutines:
 
             """ Calculate Pairwise Interactions """
             self.calculatePairwiseInteractions()
-            print 'calculated pariwise interactions'
+            print 'calculated pairwise interactions'
 
             """ Calculate Full pKa Value """
             self.calculatepKaValue()
+            end = datetime.today()
+            print end - start
             return
 
     #
@@ -450,7 +454,7 @@ class pKaRoutines:
 
 
                     self.hbondOptimization()
-                    self.dump_protein_file(pdb_file)
+                    #self.dump_protein_file(pdb_file)
                     self.zeroAllRadiiCharges()
                     self.setAllRadii()
                     self.setCharges(residue, atomnames)
@@ -597,7 +601,7 @@ class pKaRoutines:
 
 
                     self.hbondOptimization() # Optimize the hydrogens to actually put the hydrogen in the right position
-                    self.dump_protein_file(pdb_file)
+                    #self.dump_protein_file(pdb_file)
 
                     if self.routines.getbumpscore(pKa_center.residue)>100:
                         bump=True
@@ -729,10 +733,11 @@ class pKaRoutines:
         curves = get_titration_curves(protein_complex)
 
         create_output(self.titcurves_dir, curves)
-
+        
+        #print "printing phValues"
         pka_values, pH_values = self.find_pka_and_pH(curves)
-        print pka_values
-        print pH_values
+        print "pka values", pka_values
+        print "ph values", pH_values
         self.ph_at_0_5 = pH_values
 
         ln10=math.log(10)
@@ -1329,7 +1334,7 @@ class pKaRoutines:
                     #residue.stateboolean[self.get_state_name(titration.name, state)] = False
 
                     pdb_file_name = os.path.join(self.pdb_dumps_dir, name+'_background_input.pdb')
-                    self.dump_protein_file(pdb_file_name)
+                    #self.dump_protein_file(pdb_file_name)
 
                     self.hbondOptimization()
 
@@ -1462,7 +1467,7 @@ class pKaRoutines:
             pKaGroup = pKa.pKaGroup
             ambiguity = pKa.amb
 
-            print residue, pKaGroup, ambiguity
+            #print residue, pKaGroup, ambiguity
             self.routines.write("-----> Calculating Desolvation Energy for %s %s\n" %(residue.name, residue.resSeq))
             for titration in pKaGroup.DefTitrations:
                 #
@@ -1533,7 +1538,7 @@ class pKaRoutines:
 
 
                     self.hbondOptimization()
-                    self.dump_protein_file(pdb_file_name)
+                    #self.dump_protein_file(pdb_file_name)
 
                     # residue.stateboolean returns to default value (True)
                     #residue.stateboolean[self.get_state_name(titration.name, state)] = True
@@ -2210,7 +2215,7 @@ class pKaRoutines:
             for residue in chain.get("residues"):
                 resname = residue.get("name")
                 seq_id = residue.get("resSeq")
-                print resname, seq_id
+                #print resname, seq_id
                 if (res_list is None or seq_id in res_list or residue.isNterm or residue.isCterm):
                     for group in pKagroupList:
                         if resname == group:
@@ -2240,8 +2245,7 @@ class pKaRoutines:
         #
         # Find a neutral state for each group
         #
-        print(pKalist)
-        print(len(pKalist))
+        print(len(pKalist), pKalist)
         self.neutral_ref_state={}
         for this_pka in pKalist:
             residue = this_pka.residue
