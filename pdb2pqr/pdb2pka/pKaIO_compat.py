@@ -243,8 +243,8 @@ class pKaIO:
         # Write the file
         #
         fd=open(filename,'w')
-        fd.write('%s pKa File\n' %format)
-        fd.write('Format 1.0\n')
+        #fd.write('%s pKa File\n' %format)
+        #fd.write('Format 1.0\n')
         fd.write('      Group            pKa value  Model pK    dpK     dDesolv    dBack   dElec\n')
         groups=data.keys()
         # Sort accroding to the residue sequence number
@@ -273,7 +273,7 @@ class pKaIO:
                                                                                     this_data['backgr'],
                                                                                     this_data['delec']))
                 written[group]=1
-        fd.write('End of file\n')
+        #fd.write('End of file\n')
         fd.close()
         return
                          

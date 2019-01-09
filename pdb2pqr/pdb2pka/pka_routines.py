@@ -1345,7 +1345,7 @@ class pKaRoutines:
                     self.setAllRadii()
 
                     pqr_file_name = os.path.join(self.pdb_dumps_dir, name+'_background_input.pqr')
-                    self.dump_protein_file(pqr_file_name, pdbfile=False)
+                    #self.dump_protein_file(pqr_file_name, pdbfile=False)
 
                     #
                     # Set charges on all other residues
