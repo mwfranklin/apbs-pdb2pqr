@@ -981,6 +981,7 @@ class Routines:
             #if atom.optimizeable: continue
             #print atomname,atom.optimizeable,atom.added
             bumpscore = bumpscore + self.getbumpscore_atom(atom)
+            #print residue.name, residue.resSeq, atomname, bumpscore
         return bumpscore
 
 
@@ -1083,6 +1084,7 @@ class Routines:
             # Otherwise debump the residue
 
             self.write("Starting to debump %s...\n" % residue, 1)
+            #print "Starting to debump %s...\n" % residue, 1
             self.write("Debumping cutoffs: %2.1f for heavy-heavy, %2.1f for hydrogen-heavy, and %2.1f for hydrogen-hydrogen.\n" %
                        (BUMP_HEAVY_SIZE*2,
                         BUMP_HYDROGEN_SIZE+BUMP_HEAVY_SIZE,
@@ -1091,6 +1093,7 @@ class Routines:
                 self.write("Debumping Successful!\n\n", 1)
             else:
                 text = "WARNING: Unable to debump %s\n" % residue
+                #print text
                 self.write("********\n%s********\n\n" % text)
                 self.warnings.append(text)
 

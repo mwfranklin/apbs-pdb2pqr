@@ -522,6 +522,9 @@ class pKaRoutines:
             residue = pKa.residue
             pKaGroup = pKa.pKaGroup
             ambiguity = pKa.amb
+            #print residue
+            #print "pKa Group!!:", pKaGroup
+            #print "ambig", ambiguity
             #
             # Loop over each titration
             #
@@ -529,6 +532,8 @@ class pKaRoutines:
                 energies[pKa]={}
                 all_potentials[pKa]={}
             #
+            if pKaGroup == "CTR": #MWF 2-19-19
+                continue
             for titration in pKaGroup.DefTitrations:
                 if not energies[pKa].has_key(titration):
                     energies[pKa][titration]={}
@@ -818,7 +823,7 @@ class pKaRoutines:
         #
         # Desolv file % Backgr file
         #
-        X.desolv={}
+        """X.desolv={}
         X.backgr={}
         for name in pkas.keys():
             X.desolv[name]=pkas[name]['desolv']
@@ -831,7 +836,7 @@ class pKaRoutines:
         #
         # Write the charge matrix
         #
-        X.write_pdb2pka_matrix(self.output_files['matrix_dat_file_path'], correct_matrix)
+        X.write_pdb2pka_matrix(self.output_files['matrix_dat_file_path'], correct_matrix)"""
         return
 
     #
@@ -1231,7 +1236,7 @@ class pKaRoutines:
         self.hydrogenRoutines.initializeFullOptimization()
 
         # Full optimization
-        self.hydrogenRoutines.optimizeHydrogens()
+        self.hydrogenRoutines.optimizeHydrogens() 
 
         # Clean up, debump
         self.hydrogenRoutines.cleanup()
